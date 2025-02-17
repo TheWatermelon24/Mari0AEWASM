@@ -5,7 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SM64 JavaScript-UWP Port</title>
     <style>
-        body {
+        body, html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
             text-align: center;
             font-family: Arial, sans-serif;
             background-color: #f8f8f8;
@@ -35,6 +39,11 @@
         }
         .error {
             color: red;
+        }
+        #canvas {
+            width: 100vw;
+            height: 100vh;
+            display: block;
         }
         footer {
             position: fixed;
@@ -81,8 +90,14 @@
             if (hash === expectedSHA1) {
                 console.log("Valid ROM detected. Loading game...");
                 document.body.innerHTML = ""; // Clear page content
+                
+                const canvas = document.createElement('canvas');
+                canvas.className = "emscripten";
+                canvas.id = "canvas";
+                document.body.appendChild(canvas);
+                
                 const script = document.createElement('script');
-                script.src = "sm64.us.f3dex2e.js"; // Replace with actual JS file
+                script.src = "sm64.us.f3dex2e.js"; // Load the correct script
                 document.body.appendChild(script);
             } else {
                 console.log("Invalid ROM detected.");
