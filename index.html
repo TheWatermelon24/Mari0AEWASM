@@ -40,10 +40,11 @@
         .error {
             color: red;
         }
-        #canvas {
+        canvas {
             width: 100vw;
             height: 100vh;
             display: block;
+            background-color: black;
         }
         footer {
             position: fixed;
@@ -55,12 +56,12 @@
 </head>
 <body>
     <h1><b>SM64 JavaScript-UWP Port</b></h1>
-    <p>Welcome to SM64 JS-UWP Port!<br>To play you will need to provide an original English copy of SM64.</p>
+    <p>Welcome to SM64 JS-UWP Port!<br>To play, you must provide an original English copy of SM64.</p>
     <label for="romInput">ROM:</label>
     <input type="file" id="romInput" accept=".z64">
     <button id="verifyButton" disabled>Verify</button>
     <p id="message"></p>
-    
+
     <script>
         async function getSHA1(file) {
             const buffer = await file.arrayBuffer();
@@ -71,7 +72,7 @@
         document.getElementById('romInput').addEventListener('change', function() {
             document.getElementById('verifyButton').disabled = !this.files.length;
         });
-        
+
         document.getElementById('verifyButton').addEventListener('click', async function() {
             console.log("Verify button clicked!");
             const fileInput = document.getElementById('romInput');
@@ -81,21 +82,24 @@
                 document.getElementById('message').innerText = "Please select a ROM file first!";
                 return;
             }
-            
+
             console.log("File selected:", file.name);
-            const expectedSHA1 = "9bef1128717f958171a4afac3ed78ee2bb4e86ce"; // Original SM64 SHA-1
+            const expectedSHA1 = "9bef1128717f958171a4afac3ed78ee2bb4e86ce"; // Official SM64 SHA-1
             const hash = await getSHA1(file);
             console.log("Computed SHA-1:", hash);
-            
+
             if (hash === expectedSHA1) {
                 console.log("Valid ROM detected. Loading game...");
                 document.body.innerHTML = ""; // Clear page content
-                
+
                 const canvas = document.createElement('canvas');
                 canvas.className = "emscripten";
                 canvas.id = "canvas";
+                canvas.style.width = "100vw";
+                canvas.style.height = "100vh";
+                canvas.style.cursor = "default";
                 document.body.appendChild(canvas);
-                
+
                 const script = document.createElement('script');
                 script.src = "sm64.us.f3dex2e.js"; // Load the correct script
                 document.body.appendChild(script);
@@ -107,7 +111,7 @@
             }
         });
     </script>
-    
+
     <footer>Made by: TheWatermelon24</footer>
 </body>
 </html>
